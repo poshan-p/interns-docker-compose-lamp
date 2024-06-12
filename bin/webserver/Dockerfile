@@ -1,4 +1,4 @@
-ARG PHP_VERSION=""
+ARG PHP_VERSION
 FROM php:${PHP_VERSION}-apache-buster
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -31,4 +31,11 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install opcache
 
-RUN a2enmod rewrite headers
+COPY ./config/vhosts/default.conf /etc/apache2/sites-available/default.conf
+
+RUN a2enmod rewrite headers && \
+    a2ensite default && \ 
+    service apache2 restart
+
+
+
